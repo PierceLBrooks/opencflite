@@ -1,0 +1,3 @@
+[submodule "pthreads"]
+	path = pthreads
+	url = https://github.com/GerHobbelt/pthread-win32.git
