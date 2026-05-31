@@ -1,0 +1,11 @@
+Makefile
+.deps
+.DS_Store
+*.log
+*.status
+*.pc
+include/config.h
+include/CoreFoundation
+stamp-*
+libtool
+
