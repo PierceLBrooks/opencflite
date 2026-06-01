@@ -37,9 +37,11 @@
 #if TARGET_OS_MAC
 #include <sys/param.h>
 #include <sys/mount.h>
+#if INCLUDE_OBJC
 #include <CoreFoundation/CFFileSecurity.h>
 #include <CoreFoundation/CFURLEnumerator.h>
 #include <CoreFoundation/CFDate.h>
+#endif
 #endif
 
 CF_EXTERN_C_BEGIN

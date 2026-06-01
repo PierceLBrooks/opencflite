@@ -1022,7 +1022,7 @@ static bool __CFStorageEnumerateNodesInByteRangeWithBlock(CFStorageRef storage, 
 	    const CFRange * overlapsPtr = overlaps; //blocks don't let us reference arrays :(
 	    const CFIndex * offsetsPtr = offsets;
 	    CFStorageNode ** childrenPtr = children;
-#if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED /|| DEPLOYMENT_TARGET_WINDOWS
+#if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED //|| DEPLOYMENT_TARGET_WINDOWS
 	    __block bool blockStop = false;
 	    dispatch_apply(numChildren, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(size_t ind) {
 		if (! blockStop && overlapsPtr[ind].length > 0) {

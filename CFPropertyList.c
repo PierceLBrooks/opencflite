@@ -45,7 +45,11 @@
 #include <CoreFoundation/CFPriv.h>
 #include <CoreFoundation/CFStringEncodingConverter.h>
 #include <CoreFoundation/CoreFoundation_Prefix.h>
+#if defined(OPENCFLITE_CMAKE)
+#include "CFInternal.h"
+#else
 #include <CoreFoundation/CFInternal.h>
+#endif
 #if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED || DEPLOYMENT_TARGET_WINDOWS || DEPLOYMENT_TARGET_LINUX || DEPLOYMENT_TARGET_FREEBSD
 #include <CoreFoundation/CFStream.h>
 #endif

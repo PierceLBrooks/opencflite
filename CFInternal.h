@@ -90,6 +90,9 @@
 
 CF_EXTERN_C_BEGIN
 
+#if defined(OPENCFLITE_CMAKE)
+#include <CoreFoundation/CoreFoundation_Prefix.h>
+#endif
 #include <CoreFoundation/CFBase.h>
 #include <CoreFoundation/CFURL.h>
 #include <CoreFoundation/CFString.h>
