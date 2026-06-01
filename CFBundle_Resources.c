@@ -57,6 +57,7 @@
 #include <CoreFoundation/CFLocale.h>
 #include <CoreFoundation/CFPreferences.h>
 #include <string.h>
+//#undef __BLOCKS__
 #include "ForFoundationOnly.h"
 #include <CoreFoundation/CoreFoundation_Prefix.h>
 #include "CFInternal.h"

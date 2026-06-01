@@ -27,8 +27,54 @@
 */
 
 
+#if !defined(OPENCFLITE_CMAKE)
+
 #if !defined(FIND_BUCKET_NAME) || !defined(FIND_BUCKET_HASH_STYLE) || !defined(FIND_BUCKET_FOR_REHASH) || !defined(FIND_BUCKET_FOR_INDIRECT_KEY)
 #error All of FIND_BUCKET_NAME, FIND_BUCKET_HASH_STYLE, FIND_BUCKET_FOR_REHASH, and FIND_BUCKET_FOR_INDIRECT_KEY must be defined before #including this file.
+#endif
+
+#else
+#if 0
+
+#if DEPLOYMENT_TARGET_MACOSX || DEPLOYMENT_TARGET_EMBEDDED
+#import "CFBasicHash.h"
+#import <CoreFoundation/CFRuntime.h>
+#import <CoreFoundation/CFSet.h>
+#import <Block.h>
+#import <math.h>
+#else
+#include "CFBasicHash.h"
+#include <CoreFoundation/CFRuntime.h>
+#include <CoreFoundation/CFSet.h>
+#if __BLOCKS__
+#include <Block.h>
+#endif
+#include <math.h>
+#ifndef __strong
+#define __strong
+#endif
+#endif
+
+#if DEPLOYMENT_TARGET_WINDOWS
+#define __SetLastAllocationEventName(A, B) do { } while (0)
+#else
+#define __SetLastAllocationEventName(A, B) do { if (__CFOASafe && (A)) __CFSetLastAllocationEventName(A, B); } while (0)
+#endif
+
+#define GCRETAIN(A, B) kCFTypeSetCallBacks.retain(A, B)
+#define GCRELEASE(A, B) kCFTypeSetCallBacks.release(A, B)
+
+#define __AssignWithWriteBarrier(location, value) objc_assign_strongCast((id)value, (id *)location)
+
+#define ENABLE_DTRACE_PROBES 0
+#define ENABLE_MEMORY_COUNTERS 0
+
+#if defined(DTRACE_PROBES_DISABLED) && DTRACE_PROBES_DISABLED
+#undef ENABLE_DTRACE_PROBES
+#define ENABLE_DTRACE_PROBES 0
+#endif
+
+#endif
 #endif
 
 
@@ -59,7 +105,7 @@ FIND_BUCKET_NAME (CFConstBasicHashRef ht, uintptr_t stack_key
     // probe[0] = h1(k)
     // probe[i] = (h1(k) + i * c) mod num_buckets, i = 1 .. num_buckets - 1
     // h1(k) = k mod num_buckets
-#if defined(__arm__)
+#if defined(__arm__) || defined(OPENCFLITE_ARM)
     uintptr_t h1 = __CFBasicHashFold(hash_code, num_buckets_idx);
 #else
     uintptr_t h1 = hash_code % num_buckets;
@@ -70,7 +116,7 @@ FIND_BUCKET_NAME (CFConstBasicHashRef ht, uintptr_t stack_key
     // probe[i] = (h1(k) + i * h2(k)) mod num_buckets, i = 1 .. num_buckets - 1
     // h1(k) = k mod num_buckets
     // h2(k) = floor(k / num_buckets) mod num_buckets
-#if defined(__arm__)
+#if defined(__arm__) || defined(OPENCFLITE_ARM)
     uintptr_t h1 = __CFBasicHashFold(hash_code, num_buckets_idx);
     uintptr_t h2 = __CFBasicHashFold(hash_code / num_buckets, num_buckets_idx);
 #else
@@ -86,7 +132,7 @@ FIND_BUCKET_NAME (CFConstBasicHashRef ht, uintptr_t stack_key
     // h2(k) = floor(k / num_buckets) mod num_buckets
     // note: h2(k) has the effect of rotating the sequence if it is constant
     // note: pr(k) is any primitive root of num_buckets, varying this gives different sequences
-#if defined(__arm__)
+#if defined(__arm__) || defined(OPENCFLITE_ARM)
     uintptr_t h1 = __CFBasicHashFold(hash_code, num_buckets_idx);
     uintptr_t h2 = __CFBasicHashFold(hash_code / num_buckets, num_buckets_idx);
 #else
@@ -95,6 +141,9 @@ FIND_BUCKET_NAME (CFConstBasicHashRef ht, uintptr_t stack_key
 #endif
     if (0 == h2) h2 = num_buckets - 1;
     uintptr_t pr = __CFBasicHashPrimitiveRoots[num_buckets_idx];
+#else
+    uintptr_t h1 = 0;
+    uintptr_t h2 = num_buckets - 1;
 #endif
 
     COCOA_HASHTABLE_PROBING_START(ht, num_buckets);
@@ -163,7 +212,7 @@ FIND_BUCKET_NAME (CFConstBasicHashRef ht, uintptr_t stack_key
 #elif FIND_BUCKET_HASH_STYLE == 3	// __kCFBasicHashExponentialHashingValue
         probe = h1 + h2 * acc;
         if (num_buckets <= probe) {
-#if defined(__arm__)
+#if defined(__arm__) || defined(OPENCFLITE_ARM)
             probe = __CFBasicHashFold(probe, num_buckets_idx);
 #else
             probe = probe % num_buckets;
@@ -171,7 +220,7 @@ FIND_BUCKET_NAME (CFConstBasicHashRef ht, uintptr_t stack_key
         }
         acc = acc * pr;
         if (num_buckets <= acc) {
-#if defined(__arm__)
+#if defined(__arm__) || defined(OPENCFLITE_ARM)
             acc = __CFBasicHashFold(acc, num_buckets_idx);
 #else
             acc = acc % num_buckets;

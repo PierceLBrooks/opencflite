@@ -352,7 +352,7 @@ struct __CFBasicHash {
 };
 
 __private_extern__ Boolean CFBasicHashHasStrongValues(CFConstBasicHashRef ht) {
-#if defined(__arm__)
+#if defined(__arm__) || defined(OPENCFLITE_ARM)
     return false;
 #else
     return ht->bits.strong_values ? true : false;
@@ -360,7 +360,7 @@ __private_extern__ Boolean CFBasicHashHasStrongValues(CFConstBasicHashRef ht) {
 }
 
 __private_extern__ Boolean CFBasicHashHasStrongKeys(CFConstBasicHashRef ht) {
-#if defined(__arm__)
+#if defined(__arm__) || defined(OPENCFLITE_ARM)
     return false;
 #else
     return ht->bits.strong_keys ? true : false;
@@ -368,7 +368,7 @@ __private_extern__ Boolean CFBasicHashHasStrongKeys(CFConstBasicHashRef ht) {
 }
 
 CF_INLINE Boolean __CFBasicHashHasCompactableKeys(CFConstBasicHashRef ht) {
-#if defined(__arm__)
+#if defined(__arm__) || defined(OPENCFLITE_ARM)
     return false;
 #else
     return ht->bits.compactable_keys ? true : false;
@@ -376,7 +376,7 @@ CF_INLINE Boolean __CFBasicHashHasCompactableKeys(CFConstBasicHashRef ht) {
 }
 
 CF_INLINE Boolean __CFBasicHashHasCompactableValues(CFConstBasicHashRef ht) {
-#if defined(__arm__)
+#if defined(__arm__) || defined(OPENCFLITE_ARM)
     return false;
 #else
     return ht->bits.compactable_values ? true : false;
@@ -384,7 +384,7 @@ CF_INLINE Boolean __CFBasicHashHasCompactableValues(CFConstBasicHashRef ht) {
 }
 
 CF_INLINE Boolean __CFBasicHashHasWeakValues(CFConstBasicHashRef ht) {
-#if defined(__arm__)
+#if defined(__arm__) || defined(OPENCFLITE_ARM)
     return false;
 #else
     return ht->bits.weak_values ? true : false;
@@ -392,7 +392,7 @@ CF_INLINE Boolean __CFBasicHashHasWeakValues(CFConstBasicHashRef ht) {
 }
 
 CF_INLINE Boolean __CFBasicHashHasWeakKeys(CFConstBasicHashRef ht) {
-#if defined(__arm__)
+#if defined(__arm__) || defined(OPENCFLITE_ARM)
     return false;
 #else
     return ht->bits.weak_keys ? true : false;
@@ -400,7 +400,7 @@ CF_INLINE Boolean __CFBasicHashHasWeakKeys(CFConstBasicHashRef ht) {
 }
 
 CF_INLINE Boolean __CFBasicHashHasHashCache(CFConstBasicHashRef ht) {
-#if defined(__arm__)
+#if defined(__arm__) || defined(OPENCFLITE_ARM)
     return false;
 #else
     return ht->bits.hashes_offset ? true : false;
@@ -705,7 +705,7 @@ __private_extern__ CFBasicHashBucket CFBasicHashGetBucket(CFConstBasicHashRef ht
     return result;
 }
 
-#if defined(__arm__)
+#if defined(__arm__) || defined(OPENCFLITE_ARM)
 static uintptr_t __CFBasicHashFold(uintptr_t dividend, uint8_t idx) {
     switch (idx) {
     case 1: return dividend % 3;
@@ -1670,7 +1670,7 @@ CFBasicHashRef CFBasicHashCreate(CFAllocatorRef allocator, CFOptionFlags flags, 
     ht->bits.counts_offset = (flags & kCFBasicHashHasCounts) ? offset++ : 0;
     ht->bits.hashes_offset = (flags & kCFBasicHashHasHashCache) ? offset++ : 0;
 
-#if defined(__arm__)
+#if defined(__arm__) || defined(OPENCFLITE_ARM)
     ht->bits.hashes_offset = 0;
     ht->bits.strong_values = 0;
     ht->bits.strong_keys = 0;
@@ -1814,4 +1814,8 @@ void _CFbhx588461(CFBasicHashRef ht, Boolean growth) {
     if (ht->bits.finalized) HALT;
     ht->bits.fast_grow = growth ? 1 : 0;
 }
+
+#if defined(OPENCFLITE_CMAKE)
+#include "CFBasicHashFindBucket.m"
+#endif
 

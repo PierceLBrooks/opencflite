@@ -152,8 +152,12 @@ __private_extern__ CFIndex __CFActiveProcessorCount();
         #error Compiler not supported
     #endif
 #endif
-#if defined(__arm__)
-    #define HALT do {asm __volatile__("bkpt 0xCF"); kill(getpid(), 9); } while (0)
+#if defined(__arm__) || defined(OPENCFLITE_ARM)
+    #if DEPLOYMENT_TARGET_MACOSX && OPENCFLITE_BITNESS_64
+        #define HALT do {asm __volatile__(".inst 0xd4200000"); kill(getpid(), 9); } while (0)
+    #else
+        #define HALT do {asm __volatile__("bkpt 0xCF"); kill(getpid(), 9); } while (0)
+    #endif
 #endif
 
 #if defined(DEBUG)
