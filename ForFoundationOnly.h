@@ -90,7 +90,7 @@ CF_EXPORT const CFStringRef _kCFBundlePrincipalClassKey;
 #if INCLUDE_OBJC
 CF_EXPORT CFArrayRef _CFFindBundleResources(CFBundleRef bundle, CFURLRef bundleURL, CFStringRef subDirName, CFArrayRef searchLanguages, CFStringRef resName, CFArrayRef resTypes, CFIndex limit, Boolean (^predicate)(CFStringRef filename, Boolean *stop), UInt8 version);
 #else
-CF_EXPORT CFArrayRef _CFFindBundleResources(CFBundleRef bundle, CFURLRef bundleURL, CFStringRef subDirName, CFArrayRef searchLanguages, CFStringRef resName, CFArrayRef resTypes, CFIndex limit, void* predicate, uint8_t version)
+CF_EXPORT CFArrayRef _CFFindBundleResources(CFBundleRef bundle, CFURLRef bundleURL, CFStringRef subDirName, CFArrayRef searchLanguages, CFStringRef resName, CFArrayRef resTypes, CFIndex limit, void* predicate, uint8_t version);
 #endif
 #endif
 

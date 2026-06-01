@@ -5,6 +5,7 @@ set(OPENCFLITE_LANGUAGES )
 set(OPENCFLITE_CODESIGNING )
 set(SW_VERS "")
 set(UNAME_M "")
+set(SYSROOT "/")
 
 if (APPLE)
     list(APPEND OPENCFLITE_LANGUAGES "C")
@@ -132,6 +133,10 @@ include_directories(${CMAKE_CURRENT_LIST_DIR})
 #include_directories(${CMAKE_CURRENT_LIST_DIR}/include)
 include_directories(${PROJECT_BINARY_DIR})
 include_directories(${PROJECT_BINARY_DIR}/CoreFoundation)
+
+if (APPLE AND EXISTS "${SYSROOT}")
+    include_directories(${SYSROOT}/usr/include)
+endif()
 
 if (MSVC)
     add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/pthreads)
