@@ -158,7 +158,7 @@ void *_CFFDWait(void *info)
 			ret = mach_msg(&header, MACH_SEND_MSG, sizeof(mach_msg_header_t), 0, MACH_PORT_NULL, MACH_MSG_TIMEOUT_NONE, MACH_PORT_NULL);
 			
 			//fprintf(stderr, "message ret = %X\n", ret);
-			if( ret == MACH_MSG_SUCCESS ) fprintf(stderr, "message sent OK\n");
+			//if( ret == MACH_MSG_SUCCESS ) fprintf(stderr, "message sent OK\n");
 		}
 	}
 }
@@ -468,7 +468,7 @@ CFRunLoopSourceRef CFFileDescriptorCreateRunLoopSource(CFAllocatorRef allocator,
 #define LOG_CFFILEDESCRIPTOR 0
 #endif
 
-#define __CFFileDescriptorLog(format, ...)       do { fprintf(stderr, format, ##__VA_ARGS__); fflush(stderr); } while (0)
+#define __CFFileDescriptorLog(format, ...)       do { /*fprintf(stderr, format, ##__VA_ARGS__); fflush(stderr);*/ } while (0)
 
 #if LOG_CFFILEDESCRIPTOR
 #define __CFFileDescriptorMaybeLog(format, ...)  __CFFileDescriptorLog(format, ##__VA_ARGS__)

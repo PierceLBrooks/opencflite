@@ -1,3 +1,6 @@
 [submodule "pthreads"]
 	path = pthreads
 	url = https://github.com/GerHobbelt/pthread-win32.git
+[submodule "icu"]
+	path = icu
+	url = https://github.com/viaduck/icu-cmake.git
